@@ -88,6 +88,16 @@ const App = () => {
         inputDigit(key);
         return;
       }
+      if (key === ".") {
+        e.preventDefault();
+        inputDot();
+        return;
+      }
+      if (key === "Backspace") {
+        e.preventDefault();
+        del();
+        return;
+      }
       if (key === "+" || key === "-" || key === "*" || key === "/") {
         chooseOp(key as "+" | "-" | "*" | "/");
         return;
@@ -95,7 +105,7 @@ const App = () => {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [inputDigit, chooseOp]);
+  }, [inputDigit, inputDot, del, chooseOp]);
 
   const Button = ({ children, onClick, variant = "default", ariaLabel, className }: { children: string; onClick: () => void; variant?: "default" | "primary" | "operator" | "danger"; ariaLabel?: string; className?: string; }) => {
     const base = "select-none rounded-lg border border-border text-lg md:text-xl px-4 py-3 md:py-4 font-medium transition-transform duration-150 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring";
