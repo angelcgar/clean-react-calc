@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const App = () => {
   const [display, setDisplay] = useState<string>("0");
@@ -38,14 +38,8 @@ const App = () => {
 
   const chooseOp = (nextOp: "+" | "-" | "*" | "/") => {
     const current = parseFloat(display);
-    if (op && prev !== null && !overwrite) {
-      const result = compute(prev, current, op);
-      setPrev(isFinite(result) ? result : null);
-      setDisplay(isFinite(result) ? String(result) : "Error");
-      setOp(isFinite(result) ? nextOp : null);
-      setOverwrite(true);
-      return;
-    }
+    if (overwrite && op !== null) return;
+    if (op !== null && prev !== null && !overwrite) return;
     setPrev(current);
     setOp(nextOp);
     setOverwrite(true);
@@ -86,6 +80,22 @@ const App = () => {
       return cur.slice(0, -1);
     });
   };
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const key = e.key;
+      if (key >= "0" && key <= "9") {
+        inputDigit(key);
+        return;
+      }
+      if (key === "+" || key === "-" || key === "*" || key === "/") {
+        chooseOp(key as "+" | "-" | "*" | "/");
+        return;
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [inputDigit, chooseOp]);
 
   const Button = ({ children, onClick, variant = "default", ariaLabel, className }: { children: string; onClick: () => void; variant?: "default" | "primary" | "operator" | "danger"; ariaLabel?: string; className?: string; }) => {
     const base = "select-none rounded-lg border border-border text-lg md:text-xl px-4 py-3 md:py-4 font-medium transition-transform duration-150 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring";
