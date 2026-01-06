@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { compute } from "./utils/calculator";
 
 const App = () => {
   const [display, setDisplay] = useState<string>("0");
@@ -43,14 +44,6 @@ const App = () => {
     setPrev(current);
     setOp(nextOp);
     setOverwrite(true);
-  };
-
-  const compute = (a: number, b: number, operator: "+" | "-" | "*" | "/") => {
-    if (operator === "+") return a + b;
-    if (operator === "-") return a - b;
-    if (operator === "*") return a * b;
-    if (operator === "/") return b === 0 ? NaN : a / b;
-    return b;
   };
 
   const equals = () => {
